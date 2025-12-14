@@ -1,5 +1,5 @@
 
-## HFAH Vector DB
+## Barebone Vector DB
 
 Simple vector database API using FastAPI and MiniLM embeddings.
 
