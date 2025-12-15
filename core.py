@@ -111,24 +111,33 @@ class VectorDB:
     def _cosine_sim_scratch(self, query_embedding: np.ndarray) -> np.ndarray:
         """
         Compute cosine similarity between a query embedding and all stored vectors from scratch.
-        Uses only basic NumPy operations.
+        This implementation uses basic NumPy operations for clarity and educational purposes.
         """
         if self.vectors.shape[0] == 0:
             return np.array([])
 
         scores = []
+        # Iterate through each vector in the database
         for vec in self.vectors:
-            # Dot product: sum of element-wise multiplication
-            dot = np.sum(vec * query_embedding)
+            # --- Cosine Similarity Calculation ---
+            # Cosine Similarity = (A . B) / (||A|| * ||B||)
 
-            # Norms: sqrt of sum of squares
-            vec_norm = np.sqrt(np.sum(vec * vec))
-            query_norm = np.sqrt(np.sum(query_embedding * query_embedding))
+            # 1. Dot Product (A . B)
+            # Element-wise multiplication and sum
+            dot_product = np.sum(vec * query_embedding)
 
-            # Avoid division by zero
+            # 2. Vector Norms (||A|| and ||B||)
+            # Norm is the square root of the sum of squared vector elements
+            vec_norm = np.sqrt(np.sum(vec**2))
+            query_norm = np.sqrt(np.sum(query_embedding**2))
+
+            # 3. Division
+            # Avoid division by zero if a vector has zero norm
             if vec_norm == 0 or query_norm == 0:
-                scores.append(0.0)
+                similarity = 0.0
             else:
-                scores.append(dot / (vec_norm * query_norm))
+                similarity = dot_product / (vec_norm * query_norm)
+            
+            scores.append(similarity)
 
         return np.array(scores)

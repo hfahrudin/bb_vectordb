@@ -21,20 +21,24 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+# Health check endpoint
 @app.get("/")
 def read_root():
     return PlainTextResponse(content="Healthy", status_code=200)
 
+# Endpoint to search the vector database
 @app.post("/invoke", response_model=InvokeResponse)
 def invoke(request: InvokeRequest):
     response = vector_db.invoke(request) 
     return response
 
+# Endpoint to add data to the vector database
 @app.post("/add", response_model=AddResponse)
 def add(request: AddRequest):
     response = vector_db.add_data(request) 
     return response
 
+# Endpoint to get all data from the vector database
 @app.get("/all")
 def all():
     all_data = {
